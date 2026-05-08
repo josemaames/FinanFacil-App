@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#F5F1FA"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FinanFácil 💰"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#3F2A63"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnRegisterExpense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrar gasto"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#7E57C2"
+        android:padding="14dp"/>
+
+    <Button
+        android:id="@+id/btnViewExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver gastos"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#5E35B1"
+        android:padding="14dp"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
