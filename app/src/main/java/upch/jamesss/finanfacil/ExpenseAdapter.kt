@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
+import java.util.Locale
 
 class ExpenseAdapter(
     private val expenses: MutableList<TransactionEntity>,
@@ -55,28 +56,42 @@ class ExpenseAdapter(
             expense.category
 
         holder.txtAmount.text =
-            "S/ ${expense.amount}"
+            String.format(
+                Locale.getDefault(),
+                "S/ %.2f",
+                expense.amount
+            )
 
         holder.txtDescription.text =
             expense.description
 
         holder.btnDelete.setOnClickListener {
 
-            onDeleteClick(expense)
+            val currentPosition =
+                holder.bindingAdapterPosition
 
-            expenses.removeAt(position)
+            if (currentPosition != RecyclerView.NO_POSITION) {
 
-            notifyItemRemoved(position)
-
-            notifyItemRangeChanged(
-                position,
-                expenses.size
-            )
+                onDeleteClick(expenses[currentPosition])
+            }
         }
     }
 
     override fun getItemCount(): Int {
 
         return expenses.size
+    }
+
+    fun removeExpense(expense: TransactionEntity) {
+
+        val position =
+            expenses.indexOf(expense)
+
+        if (position != -1) {
+
+            expenses.removeAt(position)
+
+            notifyItemRemoved(position)
+        }
     }
 }

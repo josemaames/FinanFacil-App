@@ -3,9 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- PERMISO PARA IMÁGENES -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Permiso para imágenes -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -18,32 +17,23 @@
         android:theme="@style/Theme.FinanFacil"
         tools:targetApi="31">
 
-        <!-- LOGIN -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
-
         </activity>
 
-        <!-- MAIN -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- REGISTER EXPENSE -->
         <activity
             android:name=".RegisterExpenseActivity"
             android:exported="false" />
 
-        <!-- EXPENSES -->
         <activity
             android:name=".ExpensesActivity"
             android:exported="false" />

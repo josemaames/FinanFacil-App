@@ -19,6 +19,6 @@ interface TransactionDao {
         transaction: TransactionEntity
     )
 
-    @Query("SELECT * FROM transactions")
+    @Query("SELECT * FROM transactions ORDER BY id DESC")
     suspend fun getAllTransactions(): List<TransactionEntity>
 }

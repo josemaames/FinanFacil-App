@@ -11,7 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import kotlinx.coroutines.launch
 import upch.jamesss.finanfacil.data.local.database.AppDatabase
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
@@ -52,11 +51,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
         val imgVoucher =
             findViewById<ImageView>(R.id.imgVoucher)
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "finanfacil_db"
-        ).build()
+        val db =
+            AppDatabase.getDatabase(applicationContext)
 
         val imagePicker =
             registerForActivityResult(
@@ -79,46 +75,64 @@ class RegisterExpenseActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
 
             val amountText =
-                etAmount.text.toString()
+                etAmount.text.toString().trim()
 
             val category =
-                etCategory.text.toString()
+                etCategory.text.toString().trim()
 
             val description =
-                etDescription.text.toString()
+                etDescription.text.toString().trim()
 
-            if (
-                amountText.isNotEmpty()
-                && category.isNotEmpty()
-                && description.isNotEmpty()
-            ) {
+            val amount =
+                amountText.toDoubleOrNull()
 
-                val transaction = TransactionEntity(
-                    amount = amountText.toDouble(),
-                    category = category,
-                    description = description
-                )
+            if (amount == null || amount <= 0.0) {
 
-                lifecycleScope.launch {
+                etAmount.error =
+                    "Ingresa un monto válido"
 
-                    db.transactionDao()
-                        .insertTransaction(transaction)
+                return@setOnClickListener
+            }
 
-                    runOnUiThread {
+            if (category.isEmpty()) {
 
-                        Toast.makeText(
-                            this@RegisterExpenseActivity,
-                            "Gasto guardado 😎",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                etCategory.error =
+                    "Ingresa una categoría"
 
-                        etAmount.text.clear()
-                        etCategory.text.clear()
-                        etDescription.text.clear()
+                return@setOnClickListener
+            }
 
-                        imgVoucher.setImageDrawable(null)
-                    }
-                }
+            if (description.isEmpty()) {
+
+                etDescription.error =
+                    "Ingresa una descripción"
+
+                return@setOnClickListener
+            }
+
+            val transaction = TransactionEntity(
+                amount = amount,
+                category = category,
+                description = description
+            )
+
+            lifecycleScope.launch {
+
+                db.transactionDao()
+                    .insertTransaction(transaction)
+
+                Toast.makeText(
+                    this@RegisterExpenseActivity,
+                    "Gasto guardado 😎",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                etAmount.text.clear()
+                etCategory.text.clear()
+                etDescription.text.clear()
+
+                selectedImageUri = null
+                imgVoucher.setImageDrawable(null)
             }
         }
 

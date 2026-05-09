@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import kotlinx.coroutines.launch
 import upch.jamesss.finanfacil.data.local.database.AppDatabase
+import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
+import java.util.Locale
 
 class ExpensesActivity : AppCompatActivity() {
 
@@ -35,11 +36,21 @@ class ExpensesActivity : AppCompatActivity() {
         recyclerView.layoutManager =
             LinearLayoutManager(this)
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "finanfacil_db"
-        ).build()
+        val db =
+            AppDatabase.getDatabase(applicationContext)
+
+        fun updateTotal(expenses: List<TransactionEntity>) {
+
+            val total =
+                expenses.sumOf { it.amount }
+
+            txtTotal.text =
+                String.format(
+                    Locale.getDefault(),
+                    "Total gastado: S/ %.2f",
+                    total
+                )
+        }
 
         lifecycleScope.launch {
 
@@ -48,35 +59,27 @@ class ExpensesActivity : AppCompatActivity() {
                     .getAllTransactions()
                     .toMutableList()
 
-            runOnUiThread {
+            updateTotal(expenses)
 
-                fun updateTotal() {
+            lateinit var adapter: ExpenseAdapter
 
-                    val total =
-                        expenses.sumOf { it.amount }
+            adapter = ExpenseAdapter(
+                expenses
+            ) { expense ->
 
-                    txtTotal.text =
-                        "Total gastado: S/ $total"
+                lifecycleScope.launch {
+
+                    db.transactionDao()
+                        .deleteTransaction(expense)
+
+                    adapter.removeExpense(expense)
+
+                    updateTotal(expenses)
                 }
-
-                updateTotal()
-
-                recyclerView.adapter =
-                    ExpenseAdapter(
-                        expenses
-                    ) { expense ->
-
-                        lifecycleScope.launch {
-
-                            db.transactionDao()
-                                .deleteTransaction(expense)
-                        }
-
-                        expenses.remove(expense)
-
-                        updateTotal()
-                    }
             }
+
+            recyclerView.adapter =
+                adapter
         }
 
         btnBackHome.setOnClickListener {
