@@ -6,25 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F1FA"
+    android:fillViewport="true"
     tools:context=".LoginActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
         android:padding="24dp">
 
         <TextView
             android:id="@+id/txtLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
             android:text="FinanFácil 💰"
             android:textColor="#3F2A63"
             android:textSize="34sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtSubtitle"
@@ -33,50 +32,38 @@
             android:layout_marginTop="8dp"
             android:text="Controla tus gastos fácilmente"
             android:textColor="#6A5A89"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtLogo" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etEmail"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:backgroundTint="#7E57C2"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:padding="14dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtSubtitle" />
+            android:padding="14dp" />
 
         <EditText
             android:id="@+id/etPassword"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:backgroundTint="#7E57C2"
             android:hint="Contraseña"
             android:inputType="textPassword"
-            android:padding="14dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etEmail" />
+            android:padding="14dp" />
 
         <Button
             android:id="@+id/btnLogin"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:backgroundTint="#7E57C2"
             android:padding="14dp"
             android:text="Iniciar sesión"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword" />
+            android:textColor="@android:color/white" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </ScrollView>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F1FA"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
     tools:context=".MainActivity">
@@ -13,6 +14,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"
         android:text="FinanFácil 💰"
         android:textColor="#3F2A63"
