@@ -3,14 +3,18 @@ package upch.jamesss.finanfacil
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import upch.jamesss.finanfacil.data.local.database.AppDatabase
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
@@ -33,8 +37,14 @@ class RegisterExpenseActivity : AppCompatActivity() {
         val etAmount =
             findViewById<EditText>(R.id.etAmount)
 
-        val etCategory =
-            findViewById<EditText>(R.id.etCategory)
+        val spCategory =
+            findViewById<Spinner>(R.id.spCategory)
+
+        val etOtherCategory =
+            findViewById<EditText>(R.id.etOtherCategory)
+
+        val tilOtherCategory =
+            findViewById<TextInputLayout>(R.id.tilOtherCategory)
 
         val etDescription =
             findViewById<EditText>(R.id.etDescription)
@@ -75,13 +85,44 @@ class RegisterExpenseActivity : AppCompatActivity() {
             imagePicker.launch("image/*")
         }
 
+        spCategory.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+
+                    val isOther =
+                        spCategory.selectedItem.toString() == "Otros"
+
+                    tilOtherCategory.visibility =
+                        if (isOther) View.VISIBLE else View.GONE
+
+                    if (!isOther) {
+
+                        etOtherCategory.text.clear()
+                    }
+                }
+
+                override fun onNothingSelected(
+                    parent: AdapterView<*>?
+                ) {}
+            }
+
         btnSave.setOnClickListener {
 
             val amountText =
                 etAmount.text.toString().trim()
 
             val category =
-                etCategory.text.toString().trim()
+                if (spCategory.selectedItem.toString() == "Otros") {
+                    etOtherCategory.text.toString().trim()
+                } else {
+                    spCategory.selectedItem.toString()
+                }
 
             val description =
                 etDescription.text.toString().trim()
@@ -97,10 +138,24 @@ class RegisterExpenseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (category.isEmpty()) {
+            if (spCategory.selectedItemPosition == 0) {
 
-                etCategory.error =
-                    "Ingresa una categoría"
+                Toast.makeText(
+                    this,
+                    "Selecciona una categoría",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            if (
+                spCategory.selectedItem.toString() == "Otros" &&
+                category.isEmpty()
+            ) {
+
+                etOtherCategory.error =
+                    "Especifica la categoría"
 
                 return@setOnClickListener
             }
@@ -119,7 +174,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
             ).format(Date())
 
             val transaction = TransactionEntity(
-                amount = amountText.toDouble(),
+                amount = amount,
                 category = category,
                 description = description,
                 date = currentDate
@@ -137,7 +192,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
                 ).show()
 
                 etAmount.text.clear()
-                etCategory.text.clear()
+                spCategory.setSelection(0)
+                etOtherCategory.text.clear()
                 etDescription.text.clear()
 
                 selectedImageUri = null
