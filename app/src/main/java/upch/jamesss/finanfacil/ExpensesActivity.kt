@@ -2,7 +2,10 @@ package upch.jamesss.finanfacil
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +36,9 @@ class ExpensesActivity : AppCompatActivity() {
         val txtTotal =
             findViewById<TextView>(R.id.txtTotal)
 
+        val etSearch =
+            findViewById<EditText>(R.id.etSearch)
+
         recyclerView.layoutManager =
             LinearLayoutManager(this)
 
@@ -54,32 +60,77 @@ class ExpensesActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            val expenses =
+            val allExpenses =
                 db.transactionDao()
                     .getAllTransactions()
                     .toMutableList()
 
-            updateTotal(expenses)
+            updateTotal(allExpenses)
 
             lateinit var adapter: ExpenseAdapter
 
-            adapter = ExpenseAdapter(
-                expenses
-            ) { expense ->
+            adapter = ExpenseAdapter { expense ->
 
-                lifecycleScope.launch {
+                    lifecycleScope.launch {
 
-                    db.transactionDao()
-                        .deleteTransaction(expense)
+                        db.transactionDao()
+                            .deleteTransaction(expense)
 
-                    adapter.removeExpense(expense)
+                        allExpenses.remove(expense)
 
-                    updateTotal(expenses)
+                        adapter.updateData(allExpenses)
+
+                        updateTotal(allExpenses)
+                    }
                 }
-            }
+
+            adapter.updateData(allExpenses)
 
             recyclerView.adapter =
                 adapter
+
+            etSearch.addTextChangedListener(
+                object : TextWatcher {
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {}
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                        val query =
+                            s.toString().lowercase()
+
+                        val filteredList =
+                            allExpenses.filter {
+
+                                it.category.lowercase()
+                                    .contains(query)
+
+                                        ||
+
+                                        it.description.lowercase()
+                                            .contains(query)
+                            }
+
+                        adapter.updateData(
+                            filteredList
+                        )
+                    }
+
+                    override fun afterTextChanged(
+                        s: Editable?
+                    ) {}
+                }
+            )
         }
 
         btnBackHome.setOnClickListener {

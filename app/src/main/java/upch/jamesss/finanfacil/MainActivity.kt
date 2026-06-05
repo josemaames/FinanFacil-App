@@ -4,6 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import upch.jamesss.finanfacil.databinding.ActivityMainBinding
+import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import kotlinx.coroutines.launch
+import upch.jamesss.finanfacil.data.local.database.AppDatabase
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +21,46 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        val txtTotalSpent =
+            findViewById<TextView>(R.id.txtTotalSpent)
+
+        val txtExpensesCount =
+            findViewById<TextView>(R.id.txtExpensesCount)
+
+        val txtLastCategory =
+            findViewById<TextView>(R.id.txtLastCategory)
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "finanfacil_db"
+        ).build()
+
+        lifecycleScope.launch {
+
+            val expenses =
+                db.transactionDao()
+                    .getAllTransactions()
+
+            runOnUiThread {
+
+                val total =
+                    expenses.sumOf { it.amount }
+
+                txtTotalSpent.text =
+                    "💰 Total gastado: S/ $total"
+
+                txtExpensesCount.text =
+                    "📝 Gastos registrados: ${expenses.size}"
+
+                if (expenses.isNotEmpty()) {
+
+                    txtLastCategory.text =
+                        "🏷 Última categoría: ${expenses.last().category}"
+                }
+            }
+        }
 
         binding.btnRegisterExpense.setOnClickListener {
 
@@ -32,6 +77,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(
                 this,
                 ExpensesActivity::class.java
+            )
+
+            startActivity(intent)
+        }
+
+        binding.btnStatistics.setOnClickListener {
+
+            val intent = Intent(
+                this,
+                StatisticsActivity::class.java
             )
 
             startActivity(intent)

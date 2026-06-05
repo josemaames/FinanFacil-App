@@ -13,5 +13,7 @@ data class TransactionEntity(
 
     val category: String,
 
-    val description: String
+    val description: String,
+
+    val date: String
 )

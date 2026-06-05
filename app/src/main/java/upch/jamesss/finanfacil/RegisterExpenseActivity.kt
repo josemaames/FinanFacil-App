@@ -14,6 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import upch.jamesss.finanfacil.data.local.database.AppDatabase
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RegisterExpenseActivity : AppCompatActivity() {
 
@@ -110,10 +113,16 @@ class RegisterExpenseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val currentDate = SimpleDateFormat(
+                "dd/MM/yyyy HH:mm",
+                Locale.getDefault()
+            ).format(Date())
+
             val transaction = TransactionEntity(
-                amount = amount,
+                amount = amountText.toDouble(),
                 category = category,
-                description = description
+                description = description,
+                date = currentDate
             )
 
             lifecycleScope.launch {

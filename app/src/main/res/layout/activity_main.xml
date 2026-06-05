@@ -1,53 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F1FA"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:text="FinanFácil 💰"
-        android:textColor="#3F2A63"
-        android:textSize="32sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/btnRegisterExpense"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#7E57C2"
-        android:padding="14dp"
-        android:text="Registrar gasto"
-        android:textColor="@android:color/white" />
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnViewExpenses"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#5E35B1"
-        android:padding="14dp"
-        android:text="Ver gastos"
-        android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:text="FinanFácil 💰"
+            android:textColor="#3F2A63"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#D32F2F"
-        android:padding="14dp"
-        android:text="Salir"
-        android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/txtDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="📈 Resumen Financiero"
+            android:textColor="#5E35B1"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtTotalSpent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="#EDE7F6"
+            android:padding="14dp"
+            android:text="💰 Total gastado: S/ 0.00"
+            android:textColor="#3F2A63"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtExpensesCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="#E8F5E9"
+            android:padding="14dp"
+            android:text="📝 Gastos registrados: 0"
+            android:textColor="#1B5E20"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtLastCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:background="#FFF3E0"
+            android:padding="14dp"
+            android:text="🏷 Última categoría: -"
+            android:textColor="#E65100"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnRegisterExpense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#7E57C2"
+            android:padding="14dp"
+            android:text="➕ Registrar gasto"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnViewExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#5E35B1"
+            android:padding="14dp"
+            android:text="📋 Ver gastos"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnStatistics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#00897B"
+            android:padding="14dp"
+            android:text="📊 Estadísticas"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#D32F2F"
+            android:padding="14dp"
+            android:text="🚪 Cerrar sesión"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</ScrollView>

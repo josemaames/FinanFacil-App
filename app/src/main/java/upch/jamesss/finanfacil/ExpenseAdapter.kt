@@ -10,9 +10,11 @@ import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 import java.util.Locale
 
 class ExpenseAdapter(
-    private val expenses: MutableList<TransactionEntity>,
     private val onDeleteClick: (TransactionEntity) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+
+    private val expenses =
+        mutableListOf<TransactionEntity>()
 
     class ExpenseViewHolder(view: View) :
         RecyclerView.ViewHolder(view) {
@@ -25,6 +27,9 @@ class ExpenseAdapter(
 
         val txtDescription: TextView =
             view.findViewById(R.id.txtDescription)
+
+        val txtDate: TextView =
+            view.findViewById(R.id.txtDate)
 
         val btnDelete: Button =
             view.findViewById(R.id.btnDelete)
@@ -65,15 +70,12 @@ class ExpenseAdapter(
         holder.txtDescription.text =
             expense.description
 
+        holder.txtDate.text =
+            expense.date
+
         holder.btnDelete.setOnClickListener {
 
-            val currentPosition =
-                holder.bindingAdapterPosition
-
-            if (currentPosition != RecyclerView.NO_POSITION) {
-
-                onDeleteClick(expenses[currentPosition])
-            }
+            onDeleteClick(expense)
         }
     }
 
@@ -82,7 +84,20 @@ class ExpenseAdapter(
         return expenses.size
     }
 
-    fun removeExpense(expense: TransactionEntity) {
+    fun updateData(
+        newExpenses: List<TransactionEntity>
+    ) {
+
+        expenses.clear()
+
+        expenses.addAll(newExpenses)
+
+        notifyDataSetChanged()
+    }
+
+    fun removeExpense(
+        expense: TransactionEntity
+    ) {
 
         val position =
             expenses.indexOf(expense)
