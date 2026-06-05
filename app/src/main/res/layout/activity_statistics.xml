@@ -9,27 +9,38 @@
     android:background="#F5F1FA">
 
     <TextView
+        android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="📊 Estadísticas"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textColor="#3F2A63"/>
+        android:textColor="#3F2A63" />
+
+    <TextView
+        android:id="@+id/txtTotalGeneral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="💰 Total gastado: S/ 0.00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#7E57C2"
+        android:layout_marginTop="10dp" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/txtTopCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Categoría principal:"
+        android:text="🏆 Categoría principal:"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/btnBack"
@@ -38,6 +49,6 @@
         android:text="Volver"
         android:textColor="@android:color/white"
         android:backgroundTint="#7E57C2"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>

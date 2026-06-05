@@ -26,6 +26,9 @@ class StatisticsActivity : AppCompatActivity() {
         val txtTopCategory =
             findViewById<TextView>(R.id.txtTopCategory)
 
+        val txtTotalGeneral =
+            findViewById<TextView>(R.id.txtTotalGeneral)
+
         val btnBack =
             findViewById<Button>(R.id.btnBack)
 
@@ -37,6 +40,13 @@ class StatisticsActivity : AppCompatActivity() {
             val expenses =
                 db.transactionDao()
                     .getAllTransactions()
+
+            val totalGeneral =
+                expenses.sumOf { it.amount }
+
+            txtTotalGeneral.text =
+                "💰 Total gastado: S/ %.2f"
+                    .format(totalGeneral)
 
             val groupedExpenses =
                 expenses.groupBy { it.category }
@@ -63,19 +73,41 @@ class StatisticsActivity : AppCompatActivity() {
                     "Gastos por categoría"
                 )
 
+            dataSet.valueTextSize = 14f
+
+            dataSet.sliceSpace = 3f
+
+            dataSet.colors = listOf(
+                android.graphics.Color.parseColor("#7E57C2"),
+                android.graphics.Color.parseColor("#5E35B1"),
+                android.graphics.Color.parseColor("#9575CD"),
+                android.graphics.Color.parseColor("#26A69A"),
+                android.graphics.Color.parseColor("#42A5F5"),
+                android.graphics.Color.parseColor("#FFA726"),
+                android.graphics.Color.parseColor("#EF5350")
+            )
+
             val pieData =
                 PieData(dataSet)
 
             pieChart.data =
                 pieData
 
-            pieChart.description.isEnabled =
-                false
+            pieChart.description.isEnabled = false
 
-            pieChart.centerText =
-                "FinanFácil"
+            pieChart.centerText = "FinanFácil"
 
-            pieChart.animateY(1200)
+            pieChart.setCenterTextSize(18f)
+
+            pieChart.setEntryLabelTextSize(12f)
+
+            pieChart.isDrawHoleEnabled = true
+
+            pieChart.holeRadius = 45f
+
+            pieChart.transparentCircleRadius = 50f
+
+            pieChart.animateY(1500)
 
             pieChart.invalidate()
 
