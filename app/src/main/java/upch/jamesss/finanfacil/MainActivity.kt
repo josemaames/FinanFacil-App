@@ -84,12 +84,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnStatistics.setOnClickListener {
 
-            val intent = Intent(
-                this,
-                StatisticsActivity::class.java
+            startActivity(
+                Intent(
+                    this,
+                    StatisticsActivity::class.java
+                )
             )
-
-            startActivity(intent)
         }
 
         binding.btnLogout.setOnClickListener {

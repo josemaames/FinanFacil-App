@@ -23,11 +23,14 @@ class StatisticsActivity : AppCompatActivity() {
         val pieChart =
             findViewById<PieChart>(R.id.pieChart)
 
+        val txtTotalGeneral =
+            findViewById<TextView>(R.id.txtTotalGeneral)
+
         val txtTopCategory =
             findViewById<TextView>(R.id.txtTopCategory)
 
-        val txtTotalGeneral =
-            findViewById<TextView>(R.id.txtTotalGeneral)
+        val txtRanking =
+            findViewById<TextView>(R.id.txtRanking)
 
         val btnBack =
             findViewById<Button>(R.id.btnBack)
@@ -95,7 +98,8 @@ class StatisticsActivity : AppCompatActivity() {
 
             pieChart.description.isEnabled = false
 
-            pieChart.centerText = "FinanFácil"
+            pieChart.centerText =
+                "FinanFácil"
 
             pieChart.setCenterTextSize(18f)
 
@@ -128,6 +132,45 @@ class StatisticsActivity : AppCompatActivity() {
                 txtTopCategory.text =
                     "🏆 Categoría principal: ${topCategory.key} (S/ %.2f)"
                         .format(totalTop)
+
+                val ranking =
+                    groupedExpenses
+                        .map {
+                            Pair(
+                                it.key,
+                                it.value.sumOf { expense ->
+                                    expense.amount
+                                }
+                            )
+                        }
+                        .sortedByDescending {
+                            it.second
+                        }
+
+                val rankingText =
+                    buildString {
+
+                        append("🏅 Ranking de categorías\n\n")
+
+                        ranking.forEachIndexed { index, item ->
+
+                            val medal =
+                                when (index) {
+                                    0 -> "🥇"
+                                    1 -> "🥈"
+                                    2 -> "🥉"
+                                    else -> "🏅"
+                                }
+
+                            append(
+                                "$medal ${item.first}: S/ %.2f\n"
+                                    .format(item.second)
+                            )
+                        }
+                    }
+
+                txtRanking.text =
+                    rankingText
             }
         }
 

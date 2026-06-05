@@ -42,6 +42,16 @@
         android:textStyle="bold"
         android:layout_marginTop="20dp" />
 
+    <TextView
+        android:id="@+id/txtRanking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ranking de categorías"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#3F2A63"
+        android:layout_marginTop="16dp" />
+
     <Button
         android:id="@+id/btnBack"
         android:layout_width="match_parent"
