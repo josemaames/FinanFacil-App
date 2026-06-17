@@ -10,6 +10,7 @@ import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 import java.util.Locale
 
 class ExpenseAdapter(
+    private val onItemClick: (TransactionEntity) -> Unit,
     private val onDeleteClick: (TransactionEntity) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
@@ -72,6 +73,11 @@ class ExpenseAdapter(
 
         holder.txtDate.text =
             expense.date
+
+        holder.itemView.setOnClickListener {
+
+            onItemClick(expense)
+        }
 
         holder.btnDelete.setOnClickListener {
 

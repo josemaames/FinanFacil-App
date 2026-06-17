@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 
 @Dao
@@ -19,6 +20,16 @@ interface TransactionDao {
         transaction: TransactionEntity
     )
 
-    @Query("SELECT * FROM transactions ORDER BY id DESC")
+    @Update
+    suspend fun updateTransaction(
+        transaction: TransactionEntity
+    )
+
+    @Query("SELECT * FROM transactions ORDER BY timestamp DESC")
     suspend fun getAllTransactions(): List<TransactionEntity>
+
+    @Query("SELECT * FROM transactions WHERE id = :id LIMIT 1")
+    suspend fun getTransactionById(
+        id: Int
+    ): TransactionEntity?
 }

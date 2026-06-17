@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="ff_background">#EAF3FF</color>
+    <color name="ff_background_deep">#D8E8FF</color>
+    <color name="ff_surface">#FFFFFFFF</color>
+    <color name="ff_glass">#CCFFFFFF</color>
+    <color name="ff_glass_soft">#99FFFFFF</color>
+    <color name="ff_glass_border">#80FFFFFF</color>
+    <color name="ff_primary">#2563EB</color>
+    <color name="ff_primary_dark">#1E3A8A</color>
+    <color name="ff_primary_soft">#DBEAFE</color>
+    <color name="ff_secondary">#0E7490</color>
+    <color name="ff_teal">#14B8A6</color>
+    <color name="ff_warm">#F59E0B</color>
+    <color name="ff_info">#0284C7</color>
+    <color name="ff_warning">#EA580C</color>
+    <color name="ff_danger">#DC2626</color>
+    <color name="ff_text">#172554</color>
+    <color name="ff_text_soft">#475569</color>
+    <color name="ff_border">#BFDBFE</color>
+    <color name="ff_input_border">#93C5FD</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

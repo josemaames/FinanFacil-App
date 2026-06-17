@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
     private var selectedImageUri: Uri? = null
 
+    private var editingTransaction: TransactionEntity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -33,6 +36,9 @@ class RegisterExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_register_expense)
+
+        val txtTitle =
+            findViewById<TextView>(R.id.txtTitle)
 
         val etAmount =
             findViewById<EditText>(R.id.etAmount)
@@ -66,6 +72,24 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
         val db =
             AppDatabase.getDatabase(applicationContext)
+
+        val expenseId =
+            intent.getIntExtra(EXTRA_EXPENSE_ID, INVALID_EXPENSE_ID)
+
+        fun selectCategory(category: String) {
+
+            for (index in 0 until spCategory.count) {
+
+                if (spCategory.getItemAtPosition(index).toString() == category) {
+
+                    spCategory.setSelection(index)
+                    return
+                }
+            }
+
+            spCategory.setSelection(spCategory.count - 1)
+            etOtherCategory.setText(category)
+        }
 
         val imagePicker =
             registerForActivityResult(
@@ -112,6 +136,47 @@ class RegisterExpenseActivity : AppCompatActivity() {
                 ) {}
             }
 
+        if (expenseId != INVALID_EXPENSE_ID) {
+
+            txtTitle.text =
+                "Editar gasto"
+
+            btnSave.text =
+                "Actualizar gasto"
+
+            lifecycleScope.launch {
+
+                val transaction =
+                    db.transactionDao()
+                        .getTransactionById(expenseId)
+
+                if (transaction == null) {
+
+                    Toast.makeText(
+                        this@RegisterExpenseActivity,
+                        "No se encontró el gasto",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    finish()
+                    return@launch
+                }
+
+                editingTransaction =
+                    transaction
+
+                etAmount.setText(
+                    transaction.amount.toString()
+                )
+
+                selectCategory(transaction.category)
+
+                etDescription.setText(
+                    transaction.description
+                )
+            }
+        }
+
         btnSave.setOnClickListener {
 
             val amountText =
@@ -133,7 +198,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
             if (amount == null || amount <= 0.0) {
 
                 etAmount.error =
-                    "Ingresa un monto válido"
+                    "Ingresa un monto valido"
 
                 return@setOnClickListener
             }
@@ -142,7 +207,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this,
-                    "Selecciona una categoría",
+                    "Selecciona una categoria",
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -155,7 +220,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
             ) {
 
                 etOtherCategory.error =
-                    "Especifica la categoría"
+                    "Especifica la categoria"
 
                 return@setOnClickListener
             }
@@ -163,41 +228,68 @@ class RegisterExpenseActivity : AppCompatActivity() {
             if (description.isEmpty()) {
 
                 etDescription.error =
-                    "Ingresa una descripción"
+                    "Ingresa una descripcion"
 
                 return@setOnClickListener
             }
 
-            val currentDate = SimpleDateFormat(
-                "dd/MM/yyyy HH:mm",
-                Locale.getDefault()
-            ).format(Date())
-
-            val transaction = TransactionEntity(
-                amount = amount,
-                category = category,
-                description = description,
-                date = currentDate
-            )
-
             lifecycleScope.launch {
 
+                val currentEditingTransaction =
+                    editingTransaction
+
+                if (currentEditingTransaction == null) {
+
+                    val currentDate = SimpleDateFormat(
+                        "dd/MM/yyyy HH:mm",
+                        Locale.getDefault()
+                    ).format(Date())
+
+                    val transaction = TransactionEntity(
+                        amount = amount,
+                        category = category,
+                        description = description,
+                        date = currentDate,
+                        timestamp = System.currentTimeMillis()
+                    )
+
+                    db.transactionDao()
+                        .insertTransaction(transaction)
+
+                    Toast.makeText(
+                        this@RegisterExpenseActivity,
+                        "Gasto guardado",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    etAmount.text.clear()
+                    spCategory.setSelection(0)
+                    etOtherCategory.text.clear()
+                    etDescription.text.clear()
+
+                    selectedImageUri = null
+                    imgVoucher.setImageDrawable(null)
+
+                    return@launch
+                }
+
+                val updatedTransaction =
+                    currentEditingTransaction.copy(
+                        amount = amount,
+                        category = category,
+                        description = description
+                    )
+
                 db.transactionDao()
-                    .insertTransaction(transaction)
+                    .updateTransaction(updatedTransaction)
 
                 Toast.makeText(
                     this@RegisterExpenseActivity,
-                    "Gasto guardado 😎",
+                    "Gasto actualizado",
                     Toast.LENGTH_SHORT
                 ).show()
 
-                etAmount.text.clear()
-                spCategory.setSelection(0)
-                etOtherCategory.text.clear()
-                etDescription.text.clear()
-
-                selectedImageUri = null
-                imgVoucher.setImageDrawable(null)
+                finish()
             }
         }
 
@@ -220,5 +312,14 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
+    }
+
+    companion object {
+
+        const val EXTRA_EXPENSE_ID =
+            "extra_expense_id"
+
+        private const val INVALID_EXPENSE_ID =
+            -1
     }
 }

@@ -15,5 +15,7 @@ data class TransactionEntity(
 
     val description: String,
 
-    val date: String
+    val date: String,
+
+    val timestamp: Long = System.currentTimeMillis()
 )

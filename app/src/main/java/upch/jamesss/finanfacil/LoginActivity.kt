@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
                 etEmail.error =
-                    "Ingresa un correo válido"
+                    "Ingresa un correo valido"
 
                 return@setOnClickListener
             }
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
             if (password.isBlank()) {
 
                 etPassword.error =
-                    "Ingresa tu contraseña"
+                    "Ingresa tu contrasena"
 
                 return@setOnClickListener
             }

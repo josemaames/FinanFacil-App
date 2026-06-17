@@ -1,6 +1,7 @@
 package upch.jamesss.finanfacil
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,9 @@ class StatisticsActivity : AppCompatActivity() {
         val txtRanking =
             findViewById<TextView>(R.id.txtRanking)
 
+        val txtEmptyState =
+            findViewById<TextView>(R.id.txtEmptyStatistics)
+
         val btnBack =
             findViewById<Button>(R.id.btnBack)
 
@@ -44,11 +48,31 @@ class StatisticsActivity : AppCompatActivity() {
                 db.transactionDao()
                     .getAllTransactions()
 
+            if (expenses.isEmpty()) {
+
+                pieChart.visibility =
+                    View.GONE
+
+                txtTopCategory.visibility =
+                    View.GONE
+
+                txtRanking.visibility =
+                    View.GONE
+
+                txtEmptyState.visibility =
+                    View.VISIBLE
+
+                txtTotalGeneral.text =
+                    "Total gastado: S/ 0.00"
+
+                return@launch
+            }
+
             val totalGeneral =
                 expenses.sumOf { it.amount }
 
             txtTotalGeneral.text =
-                "💰 Total gastado: S/ %.2f"
+                "Total gastado: S/ %.2f"
                     .format(totalGeneral)
 
             val groupedExpenses =
@@ -73,7 +97,7 @@ class StatisticsActivity : AppCompatActivity() {
             val dataSet =
                 PieDataSet(
                     entries,
-                    "Gastos por categoría"
+                    "Gastos por categoria"
                 )
 
             dataSet.valueTextSize = 14f
@@ -99,7 +123,7 @@ class StatisticsActivity : AppCompatActivity() {
             pieChart.description.isEnabled = false
 
             pieChart.centerText =
-                "FinanFácil"
+                "FinanFacil"
 
             pieChart.setCenterTextSize(18f)
 
@@ -130,7 +154,7 @@ class StatisticsActivity : AppCompatActivity() {
                     }
 
                 txtTopCategory.text =
-                    "🏆 Categoría principal: ${topCategory.key} (S/ %.2f)"
+                    "Categoria principal: ${topCategory.key} (S/ %.2f)"
                         .format(totalTop)
 
                 val ranking =
@@ -150,20 +174,12 @@ class StatisticsActivity : AppCompatActivity() {
                 val rankingText =
                     buildString {
 
-                        append("🏅 Ranking de categorías\n\n")
+                        append("Ranking de categorias\n\n")
 
                         ranking.forEachIndexed { index, item ->
 
-                            val medal =
-                                when (index) {
-                                    0 -> "🥇"
-                                    1 -> "🥈"
-                                    2 -> "🥉"
-                                    else -> "🏅"
-                                }
-
                             append(
-                                "$medal ${item.first}: S/ %.2f\n"
+                                "${index + 1}. ${item.first}: S/ %.2f\n"
                                     .format(item.second)
                             )
                         }
