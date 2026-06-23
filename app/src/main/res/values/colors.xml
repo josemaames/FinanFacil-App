@@ -20,4 +20,5 @@
     <color name="ff_border">#BFDBFE</color>
     <color name="ff_input_border">#93C5FD</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="ff_card_blue">#EEF5FF</color>
 </resources>

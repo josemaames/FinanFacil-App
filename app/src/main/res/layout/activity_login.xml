@@ -20,10 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_hero_blue"
-            android:elevation="8dp"
+            android:elevation="6dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="28dp">
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp">
 
             <TextView
                 android:id="@+id/txtLogo"
@@ -37,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
                 android:text="Bienvenido 👋"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
@@ -47,7 +50,7 @@
                 android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="Gestiona tu dinero y alcanza tus metas financieras"
                 android:textColor="#DDEBFF"
@@ -56,9 +59,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:text="Registra gastos, analiza tendencias y toma mejores decisiones."
                 android:textColor="#DDEBFF"
                 android:textSize="13sp"/>
 
@@ -67,11 +69,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-18dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/bg_glass_card"
-            android:elevation="10dp"
+            android:elevation="50dp"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -79,16 +81,17 @@
                 android:text="Inicio de sesión"
                 android:textColor="@color/ff_text"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="0dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilEmail"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:hint="Correo electrónico"
-                app:boxBackgroundColor="@color/ff_glass"
+                app:boxBackgroundColor="@android:color/white"
                 app:boxCornerRadiusBottomEnd="14dp"
                 app:boxCornerRadiusBottomStart="14dp"
                 app:boxCornerRadiusTopEnd="14dp"
@@ -112,9 +115,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:hint="Contraseña"
-                app:boxBackgroundColor="@color/ff_glass"
+                app:boxBackgroundColor="@android:color/white"
                 app:boxCornerRadiusBottomEnd="14dp"
                 app:boxCornerRadiusBottomStart="14dp"
                 app:boxCornerRadiusTopEnd="14dp"
@@ -134,26 +137,25 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/bg_hero_blue"
-                android:elevation="6dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
                 android:text="Iniciar sesión"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.03" />
+                app:backgroundTint="#1E3A8A"
+                app:cornerRadius="28dp" />
 
             <TextView
                 android:id="@+id/txtRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="24dp"
                 android:text="¿No tienes cuenta? Crear una"
                 android:textColor="@color/ff_primary"
                 android:textSize="14sp"

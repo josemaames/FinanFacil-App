@@ -53,6 +53,13 @@ class LoginActivity : AppCompatActivity() {
                 MainActivity::class.java
             )
 
+            window.decorView.alpha = 0f
+
+            window.decorView.animate()
+                .alpha(1f)
+                .setDuration(600)
+                .start()
+
             startActivity(intent)
         }
     }
