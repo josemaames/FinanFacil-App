@@ -20,10 +20,10 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        // Inicializar Firebase PRIMERO
+        // Inicializar Firebase
         auth = FirebaseAuth.getInstance()
 
-        // Si ya inició sesión, entrar directamente
+        // Si ya existe una sesión iniciada
         if (auth.currentUser != null) {
 
             startActivity(
@@ -49,6 +49,9 @@ class LoginActivity : AppCompatActivity() {
         val txtRegister =
             findViewById<TextView>(R.id.txtRegister)
 
+        val txtForgotPassword =
+            findViewById<TextView>(R.id.txtForgotPassword)
+
         txtRegister.setOnClickListener {
 
             startActivity(
@@ -57,6 +60,41 @@ class LoginActivity : AppCompatActivity() {
                     RegisterActivity::class.java
                 )
             )
+
+        }
+
+        txtForgotPassword.setOnClickListener {
+
+            val email =
+                etEmail.text.toString().trim()
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                etEmail.error = "Ingrese un correo válido"
+
+                return@setOnClickListener
+            }
+
+            auth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+
+                    Toast.makeText(
+                        this,
+                        "Se envió un enlace para restablecer tu contraseña.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                }
+                .addOnFailureListener { e ->
+
+                    Toast.makeText(
+                        this,
+                        e.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                }
+
         }
 
         btnLogin.setOnClickListener {
