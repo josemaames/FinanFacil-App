@@ -22,6 +22,8 @@ import java.util.Calendar
 import java.util.Locale
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.Toast
+
 
 class ExpensesActivity : AppCompatActivity() {
 
@@ -78,27 +80,50 @@ class ExpensesActivity : AppCompatActivity() {
                     val intent =
                         Intent(
                             this,
-                            ExpenseDetailActivity::class.java
+                            RegisterExpenseActivity::class.java
                         )
 
                     intent.putExtra(
-                        ExpenseDetailActivity.EXTRA_EXPENSE_ID,
+                        RegisterExpenseActivity.EXTRA_EXPENSE_ID,
                         expense.id
                     )
-
+                    intent.putExtra(
+                        RegisterExpenseActivity.EXTRA_FIREBASE_ID,
+                        expense.firebaseId
+                    )
                     startActivity(intent)
                 },
                 onDeleteClick = { expense ->
 
-                    lifecycleScope.launch {
+                    firestore.collection("gastos")
+                        .document(expense.firebaseId)
+                        .delete()
+                        .addOnSuccessListener {
 
-                        db.transactionDao()
-                            .deleteTransaction(expense)
+                            allExpenses.remove(expense)
 
-                        allExpenses.remove(expense)
+                            adapter.removeExpense(expense)
 
-                        applyFilters()
-                    }
+                            applyFilters()
+
+                            Toast.makeText(
+                                this,
+                                "Gasto eliminado correctamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+
+                        .addOnFailureListener {
+
+                            Toast.makeText(
+                                this,
+                                "Error al eliminar el gasto",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+
                 }
             )
 
@@ -161,11 +186,8 @@ class ExpensesActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-
-
         super.onResume()
-
-        syncExpensesFromFirebase()
+        loadExpensesFromFirebase()
     }
 
     private fun syncExpensesFromFirebase() {
@@ -201,7 +223,7 @@ class ExpensesActivity : AppCompatActivity() {
 
                     }
 
-                    loadExpenses()
+                    loadExpensesFromFirebase()
 
                 }
 
@@ -209,19 +231,52 @@ class ExpensesActivity : AppCompatActivity() {
 
     }
 
-    private fun loadExpenses() {
+    private fun loadExpensesFromFirebase() {
 
-        lifecycleScope.launch {
+        val uid = auth.currentUser?.uid ?: return
 
-            val expenses =
-                db.transactionDao()
-                    .getAllTransactions()
+        firestore.collection("gastos")
+            .whereEqualTo("uidUsuario", uid)
+            .get()
+            .addOnSuccessListener { result ->
 
-            allExpenses.clear()
-            allExpenses.addAll(expenses)
+                allExpenses.clear()
 
-            applyFilters()
-        }
+                for (document in result.documents) {
+
+                    val expense = TransactionEntity(
+
+                        firebaseId = document.id,
+
+                        amount = document.getDouble("monto") ?: 0.0,
+
+                        category = document.getString("categoria") ?: "",
+
+                        description = document.getString("descripcion") ?: "",
+
+                        date = document.getString("fecha") ?: "",
+
+                        timestamp = document.getLong("timestamp") ?: 0L
+
+                    )
+
+                    allExpenses.add(expense)
+                }
+
+                applyFilters()
+
+            }
+
+            .addOnFailureListener {
+
+                Toast.makeText(
+                    this,
+                    "Error al cargar gastos",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+
     }
 
     private fun applyFilters() {

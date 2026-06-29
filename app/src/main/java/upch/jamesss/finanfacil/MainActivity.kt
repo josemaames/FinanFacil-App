@@ -47,12 +47,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
         auth = FirebaseAuth.getInstance()
+
 
         firestore = FirebaseFirestore.getInstance()
 
@@ -81,6 +84,29 @@ class MainActivity : AppCompatActivity() {
 
         progressBudget =
             findViewById(R.id.progressBudget)
+        val txtWelcome =
+            findViewById<TextView>(R.id.txtWelcome)
+
+        val txtUserEmail =
+            findViewById<TextView>(R.id.txtUserEmail)
+        val uid = auth.currentUser?.uid
+
+        if (uid != null) {
+
+            firestore.collection("usuarios")
+                .document(uid)
+                .get()
+                .addOnSuccessListener { document ->
+
+                    txtWelcome.text =
+                        "👋 Hola, ${document.getString("nombre")}"
+
+                    txtUserEmail.text =
+                        document.getString("correo")
+
+                }
+
+        }
 
         btnSaveBudget.setOnClickListener {
 

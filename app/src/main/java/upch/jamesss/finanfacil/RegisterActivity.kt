@@ -87,38 +87,19 @@ class RegisterActivity : AppCompatActivity() {
                             .set(user)
                             .addOnSuccessListener {
 
-                                val mensaje = when {
-
-                                    task.exception?.message?.contains(
-                                        "already",
-                                        true
-                                    ) == true ->
-
-                                        "Ese correo ya está registrado."
-
-                                    task.exception?.message?.contains(
-                                        "password",
-                                        true
-                                    ) == true ->
-
-                                        "La contraseña debe tener al menos 6 caracteres."
-
-                                    else ->
-
-                                        "No fue posible crear la cuenta."
-                                }
-
                                 Toast.makeText(
                                     this,
-                                    mensaje,
-                                    Toast.LENGTH_LONG
+                                    "Cuenta creada correctamente",
+                                    Toast.LENGTH_SHORT
                                 ).show()
+
                                 val profileUpdates =
                                     com.google.firebase.auth.UserProfileChangeRequest.Builder()
                                         .setDisplayName(name)
                                         .build()
 
                                 auth.currentUser?.updateProfile(profileUpdates)
+
                                 auth.signOut()
 
                                 startActivity(
@@ -129,13 +110,27 @@ class RegisterActivity : AppCompatActivity() {
                                 )
 
                                 finish()
-
                             }.addOnFailureListener {
+
+                                val mensaje = when {
+
+                                    task.exception?.message?.contains("already", true) == true ->
+                                        "Ese correo ya está registrado."
+
+                                    task.exception?.message?.contains("password", true) == true ->
+                                        "La contraseña debe tener al menos 6 caracteres."
+
+                                    task.exception?.message?.contains("email", true) == true ->
+                                        "Correo electrónico inválido."
+
+                                    else ->
+                                        "No fue posible crear la cuenta."
+                                }
 
                                 Toast.makeText(
                                     this,
-                                    "Error al guardar datos",
-                                    Toast.LENGTH_SHORT
+                                    mensaje,
+                                    Toast.LENGTH_LONG
                                 ).show()
 
                             }

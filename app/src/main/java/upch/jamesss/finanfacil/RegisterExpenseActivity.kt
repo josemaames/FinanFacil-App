@@ -81,8 +81,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
         val db =
             AppDatabase.getDatabase(applicationContext)
 
-        val expenseId =
-            intent.getIntExtra(EXTRA_EXPENSE_ID, INVALID_EXPENSE_ID)
+        val firebaseId =
+            intent.getStringExtra(EXTRA_FIREBASE_ID)
 
         fun selectCategory(category: String) {
 
@@ -144,7 +144,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
                 ) {}
             }
 
-        if (expenseId != INVALID_EXPENSE_ID) {
+        if (!firebaseId.isNullOrEmpty()) {
 
             txtTitle.text =
                 "Editar gasto"
@@ -152,43 +152,11 @@ class RegisterExpenseActivity : AppCompatActivity() {
             btnSave.text =
                 "Actualizar gasto"
 
-            lifecycleScope.launch {
-
-                val transaction =
-                    db.transactionDao()
-                        .getTransactionById(expenseId)
-
-                if (transaction == null) {
-
-                    Toast.makeText(
-                        this@RegisterExpenseActivity,
-                        "No se encontró el gasto",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    finish()
-                    return@launch
-                }
-
-                editingTransaction =
-                    transaction
-
-                etAmount.setText(
-                    transaction.amount.toString()
-                )
-
-                selectCategory(transaction.category)
-
-                etDescription.setText(
-                    transaction.description
-                )
-            }
         }
 
         btnSave.setOnClickListener {
 
-            val amountText =
-                etAmount.text.toString().trim()
+            val amountText = etAmount.text.toString().trim()
 
             val category =
                 if (spCategory.selectedItem.toString() == "Otros") {
@@ -197,55 +165,42 @@ class RegisterExpenseActivity : AppCompatActivity() {
                     spCategory.selectedItem.toString()
                 }
 
-            val description =
-                etDescription.text.toString().trim()
+            val description = etDescription.text.toString().trim()
 
-            val amount =
-                amountText.toDoubleOrNull()
+            val amount = amountText.toDoubleOrNull()
 
             if (amount == null || amount <= 0.0) {
-
-                etAmount.error =
-                    "Ingresa un monto valido"
-
+                etAmount.error = "Ingresa un monto válido"
                 return@setOnClickListener
             }
 
             if (spCategory.selectedItemPosition == 0) {
-
                 Toast.makeText(
                     this,
-                    "Selecciona una categoria",
+                    "Selecciona una categoría",
                     Toast.LENGTH_SHORT
                 ).show()
-
                 return@setOnClickListener
             }
 
             if (
-                spCategory.selectedItem.toString() == "Otros" &&
-                category.isEmpty()
+                spCategory.selectedItem.toString() == "Otros"
+                && category.isEmpty()
             ) {
-
-                etOtherCategory.error =
-                    "Especifica la categoria"
-
+                etOtherCategory.error = "Especifica la categoría"
                 return@setOnClickListener
             }
 
             if (description.isEmpty()) {
-
-                etDescription.error =
-                    "Ingresa una descripcion"
-
+                etDescription.error = "Ingresa una descripción"
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
 
-                val currentEditingTransaction =
-                    editingTransaction
+                val currentEditingTransaction = editingTransaction
 
+                // NUEVO GASTO
                 if (currentEditingTransaction == null) {
 
                     val currentDate = SimpleDateFormat(
@@ -253,76 +208,141 @@ class RegisterExpenseActivity : AppCompatActivity() {
                         Locale.getDefault()
                     ).format(Date())
 
-                    val transaction = TransactionEntity(
-                        amount = amount,
-                        category = category,
-                        description = description,
-                        date = currentDate,
-                        timestamp = System.currentTimeMillis()
-                    )
-
-                    db.transactionDao()
-                        .insertTransaction(transaction)
-
                     val uid = auth.currentUser?.uid
 
-                    if (uid != null) {
+                    if (uid == null) {
 
-                        val expense = hashMapOf(
+                        Toast.makeText(
+                            this@RegisterExpenseActivity,
+                            "Debes iniciar sesión",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                            "uidUsuario" to uid,
-
-                            "monto" to amount,
-
-                            "categoria" to category,
-
-                            "descripcion" to description,
-
-                            "fecha" to currentDate,
-
-                            "timestamp" to System.currentTimeMillis()
-
-                        )
-
-                        firestore.collection("gastos")
-                            .add(expense)
+                        return@launch
                     }
 
-                    Toast.makeText(
-                        this@RegisterExpenseActivity,
-                        "Gasto guardado correctamente",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val document = firestore.collection("gastos").document()
 
-                    etAmount.text.clear()
-                    spCategory.setSelection(0)
-                    etOtherCategory.text.clear()
-                    etDescription.text.clear()
+                    val firebaseId = document.id
 
-                    selectedImageUri = null
-                    imgVoucher.setImageDrawable(null)
+                    val gasto = hashMapOf(
+
+                        "uidUsuario" to uid,
+                        "monto" to amount,
+                        "categoria" to category,
+                        "descripcion" to description,
+                        "fecha" to currentDate,
+                        "timestamp" to System.currentTimeMillis()
+
+                    )
+
+                    document.set(gasto)
+                        .addOnSuccessListener {
+
+                            lifecycleScope.launch {
+
+                                val transaction = TransactionEntity(
+
+                                    firebaseId = firebaseId,
+                                    amount = amount,
+                                    category = category,
+                                    description = description,
+                                    date = currentDate,
+                                    timestamp = System.currentTimeMillis()
+
+                                )
+
+                                db.transactionDao().insertTransaction(transaction)
+
+                                Toast.makeText(
+                                    this@RegisterExpenseActivity,
+                                    "Gasto guardado correctamente",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                etAmount.text.clear()
+                                spCategory.setSelection(0)
+                                etOtherCategory.text.clear()
+                                etDescription.text.clear()
+
+                                selectedImageUri = null
+                                imgVoucher.setImageDrawable(null)
+
+                            }
+
+                        }
+                        .addOnFailureListener {
+
+                            Toast.makeText(
+                                this@RegisterExpenseActivity,
+                                "No se pudo guardar en Firebase",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
 
                     return@launch
                 }
 
-                val updatedTransaction =
-                    currentEditingTransaction.copy(
-                        amount = amount,
-                        category = category,
-                        description = description
-                    )
+                // EDITAR (por ahora solo Room)
+                val gastoActualizado = hashMapOf(
 
-                db.transactionDao()
-                    .updateTransaction(updatedTransaction)
+                    "uidUsuario" to auth.currentUser!!.uid,
 
-                Toast.makeText(
-                    this@RegisterExpenseActivity,
-                    "Gasto actualizado",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    "monto" to amount,
 
-                finish()
+                    "categoria" to category,
+
+                    "descripcion" to description,
+
+                    "fecha" to currentEditingTransaction.date,
+
+                    "timestamp" to currentEditingTransaction.timestamp
+
+                )
+
+                firestore.collection("gastos")
+                    .document(currentEditingTransaction.firebaseId)
+                    .set(gastoActualizado)
+                    .addOnSuccessListener {
+
+                        lifecycleScope.launch {
+
+                            val updatedTransaction =
+                                currentEditingTransaction.copy(
+
+                                    amount = amount,
+                                    category = category,
+                                    description = description
+
+                                )
+
+                            db.transactionDao()
+                                .updateTransaction(updatedTransaction)
+
+                            Toast.makeText(
+                                this@RegisterExpenseActivity,
+                                "Gasto actualizado correctamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            finish()
+
+                        }
+
+                    }
+                    .addOnFailureListener {
+
+                        Toast.makeText(
+                            this@RegisterExpenseActivity,
+                            "No se pudo actualizar en Firebase",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+
             }
+
         }
 
         btnGoExpenses.setOnClickListener {
@@ -350,6 +370,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
         const val EXTRA_EXPENSE_ID =
             "extra_expense_id"
+        const val EXTRA_FIREBASE_ID =
+            "extra_firebase_id"
 
         private const val INVALID_EXPENSE_ID =
             -1

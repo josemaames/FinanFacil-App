@@ -9,6 +9,8 @@ data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
+    val firebaseId: String = "",
+
     val amount: Double,
 
     val category: String,
