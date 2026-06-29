@@ -5,15 +5,37 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
+
+        // Inicializar Firebase PRIMERO
+        auth = FirebaseAuth.getInstance()
+
+        // Si ya inició sesión, entrar directamente
+        if (auth.currentUser != null) {
+
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                )
+            )
+
+            finish()
+            return
+        }
 
         val etEmail =
             findViewById<EditText>(R.id.etEmail)
@@ -23,6 +45,19 @@ class LoginActivity : AppCompatActivity() {
 
         val btnLogin =
             findViewById<Button>(R.id.btnLogin)
+
+        val txtRegister =
+            findViewById<TextView>(R.id.txtRegister)
+
+        txtRegister.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    RegisterActivity::class.java
+                )
+            )
+        }
 
         btnLogin.setOnClickListener {
 
@@ -34,33 +69,48 @@ class LoginActivity : AppCompatActivity() {
 
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-                etEmail.error =
-                    "Ingresa un correo valido"
-
+                etEmail.error = "Correo inválido"
                 return@setOnClickListener
             }
 
             if (password.isBlank()) {
 
-                etPassword.error =
-                    "Ingresa tu contrasena"
-
+                etPassword.error = "Ingrese su contraseña"
                 return@setOnClickListener
             }
 
-            val intent = Intent(
-                this,
-                MainActivity::class.java
-            )
+            btnLogin.isEnabled = false
 
-            window.decorView.alpha = 0f
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
 
-            window.decorView.animate()
-                .alpha(1f)
-                .setDuration(600)
-                .start()
+                    btnLogin.isEnabled = true
 
-            startActivity(intent)
+                    if (task.isSuccessful) {
+
+                        startActivity(
+                            Intent(
+                                this,
+                                MainActivity::class.java
+                            )
+                        )
+
+                        finish()
+
+                    } else {
+
+                        Toast.makeText(
+                            this,
+                            "Correo o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+
+                }
+
         }
+
     }
+
 }

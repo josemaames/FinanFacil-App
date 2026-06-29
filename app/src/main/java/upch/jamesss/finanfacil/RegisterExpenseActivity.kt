@@ -22,12 +22,17 @@ import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterExpenseActivity : AppCompatActivity() {
 
     private var selectedImageUri: Uri? = null
 
     private var editingTransaction: TransactionEntity? = null
+    private lateinit var auth: FirebaseAuth
+
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -36,6 +41,9 @@ class RegisterExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_register_expense)
+        auth = FirebaseAuth.getInstance()
+
+        firestore = FirebaseFirestore.getInstance()
 
         val txtTitle =
             findViewById<TextView>(R.id.txtTitle)
@@ -256,9 +264,33 @@ class RegisterExpenseActivity : AppCompatActivity() {
                     db.transactionDao()
                         .insertTransaction(transaction)
 
+                    val uid = auth.currentUser?.uid
+
+                    if (uid != null) {
+
+                        val expense = hashMapOf(
+
+                            "uidUsuario" to uid,
+
+                            "monto" to amount,
+
+                            "categoria" to category,
+
+                            "descripcion" to description,
+
+                            "fecha" to currentDate,
+
+                            "timestamp" to System.currentTimeMillis()
+
+                        )
+
+                        firestore.collection("gastos")
+                            .add(expense)
+                    }
+
                     Toast.makeText(
                         this@RegisterExpenseActivity,
-                        "Gasto guardado",
+                        "Gasto guardado correctamente",
                         Toast.LENGTH_SHORT
                     ).show()
 

@@ -14,10 +14,14 @@ import kotlinx.coroutines.launch
 import upch.jamesss.finanfacil.data.local.database.AppDatabase
 import upch.jamesss.finanfacil.databinding.ActivityMainBinding
 import java.util.Calendar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
 
     private val db by lazy {
         AppDatabase.getDatabase(applicationContext)
@@ -35,6 +39,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtBudgetSummary: TextView
     private lateinit var txtBudgetAlert: TextView
     private lateinit var progressBudget: ProgressBar
+    private lateinit var txtWelcome: TextView
+
+    private lateinit var auth: FirebaseAuth
+
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -43,6 +52,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+        auth = FirebaseAuth.getInstance()
+
+        firestore = FirebaseFirestore.getInstance()
+
+        txtWelcome = findViewById(R.id.txtWelcome)
 
         txtTotalSpent =
             findViewById(R.id.txtTotalSpent)
@@ -105,13 +119,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnLogout.setOnClickListener {
 
+            // Cerrar sesión de Firebase
+            FirebaseAuth.getInstance().signOut()
+
+            // Volver al Login
             val intent = Intent(
                 this,
                 LoginActivity::class.java
             )
 
             intent.flags =
-                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
             startActivity(intent)
 
@@ -123,7 +141,8 @@ class MainActivity : AppCompatActivity() {
 
         super.onResume()
 
-        loadDashboard()
+        syncExpensesFromFirebase()
+
     }
 
     private fun loadDashboard() {
@@ -171,6 +190,49 @@ class MainActivity : AppCompatActivity() {
                 monthlySpent
             )
         }
+    }
+
+    private fun syncExpensesFromFirebase() {
+
+        val uid = auth.currentUser?.uid ?: return
+
+        firestore.collection("gastos")
+            .whereEqualTo("uidUsuario", uid)
+            .get()
+            .addOnSuccessListener { result ->
+
+                lifecycleScope.launch {
+
+                    db.transactionDao().deleteAllTransactions()
+
+                    for (document in result.documents) {
+
+                        val expense = TransactionEntity(
+
+                            amount = document.getDouble("monto") ?: 0.0,
+
+                            category = document.getString("categoria") ?: "",
+
+                            description = document.getString("descripcion") ?: "",
+
+                            date = document.getString("fecha") ?: "",
+
+                            timestamp = document.getLong("timestamp")
+                                ?: System.currentTimeMillis()
+
+                        )
+
+                        db.transactionDao()
+                            .insertTransaction(expense)
+
+                    }
+
+                    loadDashboard()
+
+                }
+
+            }
+
     }
 
     private fun saveMonthlyBudget() {
@@ -294,4 +356,31 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_MONTHLY_BUDGET =
             "monthly_budget"
     }
+    private fun loadUserName() {
+
+        val uid = auth.currentUser?.uid ?: return
+
+        firestore.collection("usuarios")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+
+                if (document.exists()) {
+
+                    val nombre =
+                        document.getString("nombre") ?: "Usuario"
+
+                    val primerNombre =
+                        nombre.split(" ").first()
+
+                    txtWelcome.text =
+                        "¡Hola, $primerNombre! 👋"
+
+                }
+
+            }
+
+    }
+
 }
+

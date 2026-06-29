@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
 
     kotlin("kapt")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -102,6 +104,15 @@ dependencies {
     kapt(
         "com.github.bumptech.glide:compiler:4.16.0"
     )
+
+// Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+
+// Firebase Authentication
+    implementation("com.google.firebase:firebase-auth")
+
+// Cloud Firestore
+    implementation("com.google.firebase:firebase-firestore")
 
     // TESTS
     testImplementation(libs.junit)

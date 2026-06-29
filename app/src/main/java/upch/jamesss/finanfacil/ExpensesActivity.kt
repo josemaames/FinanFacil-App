@@ -20,6 +20,8 @@ import upch.jamesss.finanfacil.data.local.database.AppDatabase
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
 import java.util.Calendar
 import java.util.Locale
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ExpensesActivity : AppCompatActivity() {
 
@@ -27,6 +29,9 @@ class ExpensesActivity : AppCompatActivity() {
         AppDatabase.getDatabase(applicationContext)
     }
 
+    private val auth = FirebaseAuth.getInstance()
+
+    private val firestore = FirebaseFirestore.getInstance()
     private val allExpenses =
         mutableListOf<TransactionEntity>()
 
@@ -157,9 +162,51 @@ class ExpensesActivity : AppCompatActivity() {
 
     override fun onResume() {
 
+
         super.onResume()
 
-        loadExpenses()
+        syncExpensesFromFirebase()
+    }
+
+    private fun syncExpensesFromFirebase() {
+
+        val user = auth.currentUser ?: return
+
+        firestore.collection("gastos")
+            .whereEqualTo("uidUsuario", user.uid)
+            .get()
+            .addOnSuccessListener { result ->
+
+                lifecycleScope.launch {
+
+                    db.transactionDao().deleteAllTransactions()
+
+                    for (document in result.documents) {
+
+                        val expense = TransactionEntity(
+
+                            amount = document.getDouble("monto") ?: 0.0,
+
+                            category = document.getString("categoria") ?: "",
+
+                            description = document.getString("descripcion") ?: "",
+
+                            date = document.getString("fecha") ?: "",
+
+                            timestamp = document.getLong("timestamp") ?: 0L
+
+                        )
+
+                        db.transactionDao().insertTransaction(expense)
+
+                    }
+
+                    loadExpenses()
+
+                }
+
+            }
+
     }
 
     private fun loadExpenses() {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "940933630461",
+    "project_id": "finanfacil-59757",
+    "storage_bucket": "finanfacil-59757.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940933630461:android:8a71cab906ddf5b9b9b194",
+        "android_client_info": {
+          "package_name": "upch.jamesss.finanfacil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoqF3nm8taWfucqlLMQ8GBTYiWCZQqXGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
