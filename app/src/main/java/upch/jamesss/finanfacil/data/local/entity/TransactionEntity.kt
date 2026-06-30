@@ -21,5 +21,10 @@ data class TransactionEntity(
 
     val timestamp: Long = System.currentTimeMillis(),
 
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+
+    // Indica si el gasto fue marcado por el usuario
+    // como potencialmente deducible para Impuesto a la Renta
+    val isDeductible: Boolean = false
+
 )

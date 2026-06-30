@@ -17,6 +17,7 @@ import java.util.Calendar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import upch.jamesss.finanfacil.data.local.entity.TransactionEntity
+import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,9 +28,7 @@ class MainActivity : AppCompatActivity() {
         AppDatabase.getDatabase(applicationContext)
     }
 
-    private val preferences by lazy {
-        getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
-    }
+
     private lateinit var txtBudgetValue: TextView
 
     private lateinit var txtAvailable: TextView
@@ -47,6 +46,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var btnTaxAssistant: MaterialButton
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         txtAvailable = findViewById(R.id.txtAvailable)
 
         etMonthlyBudget = findViewById(R.id.etMonthlyBudget)
-        btnSaveBudget = findViewById(R.id.btnSaveBudget)
+
 
         progressBudget = findViewById(R.id.progressBudget)
 
@@ -94,9 +95,25 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
-        btnSaveBudget.setOnClickListener {
-            saveMonthlyBudget()
+        btnTaxAssistant =
+            findViewById(R.id.btnTaxAssistant)
+
+
+
+        btnTaxAssistant.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    TaxAssistantActivity::class.java
+                )
+            )
+
         }
+
+
+
+
 
         binding.btnRegisterExpense.setOnClickListener {
             startActivity(
@@ -225,7 +242,14 @@ class MainActivity : AppCompatActivity() {
                             date = document.getString("fecha") ?: "",
 
                             timestamp = document.getLong("timestamp")
-                                ?: System.currentTimeMillis()
+                                ?: System.currentTimeMillis(),
+
+                            firebaseId = document.id,
+
+                            imageUrl = document.getString("imageUrl") ?: "",
+
+                            isDeductible =
+                                document.getBoolean("isDeductible") ?: false
 
                         )
 

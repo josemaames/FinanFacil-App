@@ -30,20 +30,22 @@
             android:name=".RegisterActivity"
             android:exported="false" />
 
-        <!-- Principal -->
+        <!-- Pantalla principal -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- Gastos -->
+        <!-- Registro de gastos -->
         <activity
             android:name=".RegisterExpenseActivity"
             android:exported="false" />
 
+        <!-- Lista de gastos -->
         <activity
             android:name=".ExpensesActivity"
             android:exported="false" />
 
+        <!-- Detalle del gasto -->
         <activity
             android:name=".ExpenseDetailActivity"
             android:exported="false" />
@@ -51,6 +53,16 @@
         <!-- Estadísticas -->
         <activity
             android:name=".StatisticsActivity"
+            android:exported="false" />
+
+        <!-- Asistente Tributario -->
+        <activity
+            android:name=".TaxAssistantActivity"
+            android:exported="false" />
+
+        <!-- Gastos potencialmente deducibles -->
+        <activity
+            android:name=".DeductibleExpensesActivity"
             android:exported="false" />
 
     </application>

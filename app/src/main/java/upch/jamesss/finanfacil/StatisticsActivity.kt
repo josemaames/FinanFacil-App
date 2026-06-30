@@ -45,6 +45,9 @@ class StatisticsActivity : AppCompatActivity() {
     private lateinit var txtInsights: TextView
     private lateinit var txtMonthlyComparison: TextView
     private lateinit var btnExportPdf: Button
+    private lateinit var txtDeductible: TextView
+
+    private lateinit var txtNoDeductible: TextView
 
     private lateinit var layoutRanking: LinearLayout
 
@@ -170,6 +173,14 @@ class StatisticsActivity : AppCompatActivity() {
                     entries,
                     "Gastos por categoria"
                 )
+            val deductibleCategories =
+                setOf(
+
+                    "Salud",
+
+                    "Educación"
+
+                )
 
             pieDataSet.valueTextSize = 14f
             pieDataSet.sliceSpace = 3f
@@ -183,6 +194,32 @@ class StatisticsActivity : AppCompatActivity() {
                 android.graphics.Color.parseColor("#FFA726"),
                 android.graphics.Color.parseColor("#EF5350")
             )
+
+            val totalDeductible =
+                expenses
+                    .filter {
+
+                        it.category in deductibleCategories
+
+                    }
+                    .sumOf {
+
+                        it.amount
+
+                    }
+
+            val totalNoDeductible =
+                expenses
+                    .filter {
+
+                        it.category !in deductibleCategories
+
+                    }
+                    .sumOf {
+
+                        it.amount
+
+                    }
 
             val pieData =
                 PieData(pieDataSet)
@@ -349,6 +386,14 @@ class StatisticsActivity : AppCompatActivity() {
                     layoutRanking.addView(view)
                 }
 
+                txtDeductible.text =
+                    "🟢 Deducibles: S/ %.2f"
+                        .format(totalDeductible)
+
+                txtNoDeductible.text =
+                    "🔴 No deducibles: S/ %.2f"
+                        .format(totalNoDeductible)
+
                 val recomendacion =
                     if (porcentaje >= 50)
                         "💡 Considera reducir gastos en $topCategory para equilibrar tu presupuesto."
@@ -413,6 +458,7 @@ S/ %.2f
 
         }
 
+
         btnBack.setOnClickListener {
 
             finish()
@@ -441,6 +487,11 @@ S/ %.2f
         layoutRanking = findViewById(R.id.layoutRanking)
 
         btnBack = findViewById(R.id.btnBack)
+        txtDeductible =
+            findViewById(R.id.txtDeductible)
+
+        txtNoDeductible =
+            findViewById(R.id.txtNoDeductible)
 
         // ← ESTA LÍNEA FALTABA
         btnExportPdf = findViewById(R.id.btnExportPdf)

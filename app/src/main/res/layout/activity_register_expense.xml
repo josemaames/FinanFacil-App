@@ -181,6 +181,14 @@
 
         </LinearLayout>
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cbDeductible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="🧾 Este gasto puede ser deducible para el Impuesto a la Renta"
+            android:textStyle="bold"/>
+
         <Button
             android:id="@+id/btnSaveExpense"
             android:layout_width="match_parent"

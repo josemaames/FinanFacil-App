@@ -24,6 +24,7 @@ import java.util.Date
 import java.util.Locale
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.material.checkbox.MaterialCheckBox
 
 class RegisterExpenseActivity : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class RegisterExpenseActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var cbDeductible: MaterialCheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -41,6 +43,10 @@ class RegisterExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_register_expense)
+
+        cbDeductible =
+            findViewById(R.id.cbDeductible)
+
         auth = FirebaseAuth.getInstance()
 
         firestore = FirebaseFirestore.getInstance()
@@ -232,7 +238,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
                         "categoria" to category,
                         "descripcion" to description,
                         "fecha" to currentDate,
-                        "timestamp" to System.currentTimeMillis()
+                        "timestamp" to System.currentTimeMillis(),
+                        "isDeductible" to cbDeductible.isChecked
 
                     )
 
@@ -248,7 +255,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
                                     category = category,
                                     description = description,
                                     date = currentDate,
-                                    timestamp = System.currentTimeMillis()
+                                    timestamp = System.currentTimeMillis(),
+                                    isDeductible = cbDeductible.isChecked
 
                                 )
 
@@ -313,7 +321,8 @@ class RegisterExpenseActivity : AppCompatActivity() {
 
                                     amount = amount,
                                     category = category,
-                                    description = description
+                                    description = description,
+                                    isDeductible = cbDeductible.isChecked
 
                                 )
 

@@ -18,7 +18,7 @@
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📊 Estadísticas"
+            android:text="🧾 Asistente Tributario"
             android:textColor="@color/ff_text"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -51,13 +51,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💰 Total gastado"
+                android:text="💰 Total potencialmente deducible"
                 android:textColor="#DDEBFF"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtTotalGeneral"
+                android:id="@+id/txtTotalDeducible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -250,13 +250,13 @@
             android:background="@drawable/bg_glass_card_blue"
             android:elevation="6dp"
             android:padding="18dp"
-            android:text="Categoría principal"
+            android:text="Categorías potencialmente deducibles"
             android:textColor="@color/ff_text"
             android:textSize="17sp"
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/txtRanking"
+            android:id="@+id/txtDetalletributario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -366,6 +366,26 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/txtDeductibleInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_glass_card_blue"
+            android:padding="18dp"
+            android:textColor="@color/ff_text"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/txtRecommendations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_glass_card_blue"
+            android:padding="18dp"
+            android:textColor="@color/ff_text"
+            android:textSize="16sp"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExportPdf"
             android:layout_width="match_parent"
@@ -377,6 +397,18 @@
             android:textColor="@android:color/white"
             app:backgroundTint="#2563EB"
             app:cornerRadius="24dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewDeductibles"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:text="📄 Ver gastos deducibles"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#16A34A"
+            app:cornerRadius="18dp"/>
 
         <Button
             android:id="@+id/btnBack"

@@ -125,17 +125,7 @@
                 android:textColor="@color/ff_text"
                 android:textColorHint="@color/ff_text_soft" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveBudget"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:text="Guardar presupuesto"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:backgroundTint="#2563EB"
-                app:cornerRadius="24dp" />
+
 
             <ProgressBar
                 android:id="@+id/progressBudget"
@@ -278,40 +268,61 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStatistics"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:gravity="center"
-            android:text="📊\nEstadísticas"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            app:backgroundTint="#1E3A8A"
-            app:cornerRadius="20dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStatistics"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:text="📊\nEstadísticas"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#1E3A8A"
+                app:cornerRadius="20dp"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogout"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:gravity="center"
-            android:text="🚪\nSalir"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            app:backgroundTint="#EA580C"
-            app:cornerRadius="20dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="🚪\nSalir"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#EA580C"
+                app:cornerRadius="20dp"/>
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTaxAssistant"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:text="🧾\nAsistente Tributario"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#16A34A"
+                app:cornerRadius="20dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

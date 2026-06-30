@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_screen_blue"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🧾 Gastos potencialmente deducibles"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:textColor="@color/ff_text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Listado de gastos marcados como deducibles"
+        android:textSize="15sp"
+        android:textColor="@color/ff_text_soft" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerDeductible"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="18dp" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/btn_primary_gradient"
+        android:text="Volver"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

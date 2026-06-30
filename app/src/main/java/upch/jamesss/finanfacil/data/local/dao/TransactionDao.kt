@@ -35,4 +35,12 @@ interface TransactionDao {
 
     @Query("DELETE FROM transactions")
     suspend fun deleteAllTransactions()
+
+    @Query("""
+SELECT *
+FROM transactions
+WHERE isDeductible = 1
+ORDER BY timestamp DESC
+""")
+    suspend fun getDeductibleExpenses(): List<TransactionEntity>
 }
