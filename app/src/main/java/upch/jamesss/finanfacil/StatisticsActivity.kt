@@ -22,6 +22,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.components.XAxis
 import upch.jamesss.finanfacil.utils.PdfExporter
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
@@ -48,6 +50,7 @@ class StatisticsActivity : AppCompatActivity() {
 
     private lateinit var btnBack: Button
 
+
     private lateinit var db: AppDatabase
     private var totalGeneral = 0.0
 
@@ -60,6 +63,8 @@ class StatisticsActivity : AppCompatActivity() {
     private var porcentaje = 0
 
     private var topCategory = ""
+
+    private var nombreUsuario = "Usuario"
 
     private var ranking =
         mutableListOf<Pair<String, Double>>()
@@ -445,7 +450,7 @@ S/ %.2f
             val pdf =
                 PdfExporter.exportReport(
                     context = this,
-                    usuario = "José Manuel Ames",
+                    usuario = nombreUsuario,
                     total = totalGeneral,
                     presupuesto = presupuesto,
                     disponible = disponible,
@@ -464,5 +469,27 @@ S/ %.2f
         }
 
         db = AppDatabase.getDatabase(applicationContext)
+
+// Obtener el nombre del usuario desde Firebase
+        val auth = FirebaseAuth.getInstance()
+
+        val firestore = FirebaseFirestore.getInstance()
+
+        val uid = auth.currentUser?.uid
+
+        if (uid != null) {
+
+            firestore.collection("usuarios")
+                .document(uid)
+                .get()
+                .addOnSuccessListener { document: com.google.firebase.firestore.DocumentSnapshot ->
+
+                    nombreUsuario =
+                        document.getString("nombre") ?: "Usuario"
+
+                }
+
+        }
     }
+
 }

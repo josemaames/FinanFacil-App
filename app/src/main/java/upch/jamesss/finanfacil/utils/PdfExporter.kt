@@ -259,10 +259,15 @@ object PdfExporter {
         if (!downloads.exists()) {
             downloads.mkdirs()
         }
+        val fecha =
+            SimpleDateFormat(
+                "yyyyMMdd_HHmmss",
+                Locale.getDefault()
+            ).format(Date())
 
         val file = File(
             downloads,
-            "FinanFacil_Reporte.pdf"
+            "FinanFacil_Reporte_$fecha.pdf"
         )
 
         pdf.writeTo(file.outputStream())
