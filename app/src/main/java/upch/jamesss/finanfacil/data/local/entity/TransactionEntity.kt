@@ -19,5 +19,7 @@ data class TransactionEntity(
 
     val date: String,
 
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+
+    val imageUrl: String = ""
 )

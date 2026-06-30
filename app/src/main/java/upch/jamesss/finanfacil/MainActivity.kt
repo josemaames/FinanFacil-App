@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity() {
     private val preferences by lazy {
         getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
     }
+    private lateinit var txtBudgetValue: TextView
 
+    private lateinit var txtAvailable: TextView
     private lateinit var txtTotalSpent: TextView
     private lateinit var txtExpensesCount: TextView
     private lateinit var txtLastCategory: TextView
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSaveBudget: Button
     private lateinit var txtBudgetSummary: TextView
     private lateinit var txtBudgetAlert: TextView
+
     private lateinit var progressBudget: ProgressBar
     private lateinit var txtWelcome: TextView
 
@@ -47,48 +50,33 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-
-
         firestore = FirebaseFirestore.getInstance()
 
         txtWelcome = findViewById(R.id.txtWelcome)
 
-        txtTotalSpent =
-            findViewById(R.id.txtTotalSpent)
+        txtTotalSpent = findViewById(R.id.txtTotalSpent)
+        txtExpensesCount = findViewById(R.id.txtExpensesCount)
+        txtLastCategory = findViewById(R.id.txtLastCategory)
 
-        txtExpensesCount =
-            findViewById(R.id.txtExpensesCount)
+        txtBudgetSummary = findViewById(R.id.txtBudgetSummary)
+        txtBudgetAlert = findViewById(R.id.txtBudgetAlert)
 
-        txtLastCategory =
-            findViewById(R.id.txtLastCategory)
+        txtBudgetValue = findViewById(R.id.txtBudgetValue)
+        txtAvailable = findViewById(R.id.txtAvailable)
 
-        etMonthlyBudget =
-            findViewById(R.id.etMonthlyBudget)
+        etMonthlyBudget = findViewById(R.id.etMonthlyBudget)
+        btnSaveBudget = findViewById(R.id.btnSaveBudget)
 
-        btnSaveBudget =
-            findViewById(R.id.btnSaveBudget)
+        progressBudget = findViewById(R.id.progressBudget)
 
-        txtBudgetSummary =
-            findViewById(R.id.txtBudgetSummary)
+        val txtUserEmail = findViewById<TextView>(R.id.txtUserEmail)
 
-        txtBudgetAlert =
-            findViewById(R.id.txtBudgetAlert)
-
-        progressBudget =
-            findViewById(R.id.progressBudget)
-        val txtWelcome =
-            findViewById<TextView>(R.id.txtWelcome)
-
-        val txtUserEmail =
-            findViewById<TextView>(R.id.txtUserEmail)
         val uid = auth.currentUser?.uid
 
         if (uid != null) {
@@ -103,62 +91,45 @@ class MainActivity : AppCompatActivity() {
 
                     txtUserEmail.text =
                         document.getString("correo")
-
                 }
-
         }
 
         btnSaveBudget.setOnClickListener {
-
             saveMonthlyBudget()
         }
 
         binding.btnRegisterExpense.setOnClickListener {
-
-            val intent = Intent(
-                this,
-                RegisterExpenseActivity::class.java
+            startActivity(
+                Intent(this, RegisterExpenseActivity::class.java)
             )
-
-            startActivity(intent)
         }
 
         binding.btnViewExpenses.setOnClickListener {
-
-            val intent = Intent(
-                this,
-                ExpensesActivity::class.java
+            startActivity(
+                Intent(this, ExpensesActivity::class.java)
             )
-
-            startActivity(intent)
         }
 
         binding.btnStatistics.setOnClickListener {
-
             startActivity(
-                Intent(
-                    this,
-                    StatisticsActivity::class.java
-                )
+                Intent(this, StatisticsActivity::class.java)
             )
         }
 
         binding.btnLogout.setOnClickListener {
 
-            // Cerrar sesión de Firebase
             FirebaseAuth.getInstance().signOut()
 
-            // Volver al Login
             val intent = Intent(
                 this,
                 LoginActivity::class.java
             )
 
             intent.flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
 
             startActivity(intent)
-
             finish()
         }
     }
@@ -173,49 +144,59 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadDashboard() {
 
-        val monthlyBudget =
-            preferences.getFloat(KEY_MONTHLY_BUDGET, 0f).toDouble()
+        val uid = auth.currentUser?.uid ?: return
 
-        if (monthlyBudget > 0.0) {
+        firestore.collection("usuarios")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
 
-            etMonthlyBudget.setText(
-                "%.2f".format(monthlyBudget)
-            )
-        }
+                val monthlyBudget =
+                    document.getDouble("presupuesto") ?: 0.0
 
-        lifecycleScope.launch {
+                if (monthlyBudget > 0) {
 
-            val expenses =
-                db.transactionDao()
-                    .getAllTransactions()
-
-            val total =
-                expenses.sumOf { it.amount }
-
-            val monthlySpent =
-                expenses
-                    .filter { it.timestamp >= getStartOfCurrentMonth() }
-                    .sumOf { it.amount }
-
-            txtTotalSpent.text =
-                "Total gastado: S/ %.2f"
-                    .format(total)
-
-            txtExpensesCount.text =
-                "Gastos registrados: ${expenses.size}"
-
-            txtLastCategory.text =
-                if (expenses.isNotEmpty()) {
-                    "Última categoría: ${expenses.first().category}"
-                } else {
-                    "Última categoría: -"
+                    etMonthlyBudget.setText(
+                        "%.2f".format(monthlyBudget)
+                    )
                 }
 
-            updateBudgetStatus(
-                monthlyBudget,
-                monthlySpent
-            )
-        }
+                lifecycleScope.launch {
+
+                    val expenses =
+                        db.transactionDao().getAllTransactions()
+
+                    val total =
+                        expenses.sumOf { it.amount }
+
+                    val monthlySpent =
+                        expenses
+                            .filter {
+                                it.timestamp >= getStartOfCurrentMonth()
+                            }
+                            .sumOf { it.amount }
+
+                    txtTotalSpent.text =
+                        "Total gastado: S/ %.2f".format(total)
+
+                    txtExpensesCount.text =
+                        "Gastos registrados: ${expenses.size}"
+
+                    txtLastCategory.text =
+                        if (expenses.isNotEmpty())
+                            "Última categoría: ${expenses.first().category}"
+                        else
+                            "Última categoría: -"
+
+                    updateBudgetStatus(
+                        monthlyBudget,
+                        monthlySpent
+                    )
+
+                }
+
+            }
+
     }
 
     private fun syncExpensesFromFirebase() {
@@ -271,22 +252,36 @@ class MainActivity : AppCompatActivity() {
         if (budget == null || budget <= 0.0) {
 
             etMonthlyBudget.error =
-                "Ingresa un presupuesto valido"
+                "Ingresa un presupuesto válido"
 
             return
         }
 
-        preferences.edit()
-            .putFloat(KEY_MONTHLY_BUDGET, budget.toFloat())
-            .apply()
+        val uid = auth.currentUser?.uid ?: return
 
-        Toast.makeText(
-            this,
-            "Presupuesto guardado",
-            Toast.LENGTH_SHORT
-        ).show()
+        firestore.collection("usuarios")
+            .document(uid)
+            .update("presupuesto", budget)
+            .addOnSuccessListener {
 
-        loadDashboard()
+                Toast.makeText(
+                    this,
+                    "Presupuesto guardado correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                loadDashboard()
+
+            }
+            .addOnFailureListener {
+
+                Toast.makeText(
+                    this,
+                    "No se pudo guardar el presupuesto",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
     }
 
     private fun updateBudgetStatus(
@@ -314,7 +309,24 @@ class MainActivity : AppCompatActivity() {
 
         val remaining =
             monthlyBudget - monthlySpent
+        txtBudgetValue.text =
+            "S/ %.2f".format(monthlyBudget)
 
+        txtAvailable.text =
+            "S/ %.2f".format(remaining)
+        if (remaining < 0) {
+
+            txtAvailable.setTextColor(
+                Color.RED
+            )
+
+        } else {
+
+            txtAvailable.setTextColor(
+                Color.parseColor("#0F766E")
+            )
+
+        }
         val percentage =
             ((monthlySpent / monthlyBudget) * 100)
                 .toInt()

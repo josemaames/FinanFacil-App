@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,44 +18,178 @@
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estadísticas"
+            android:text="📊 Estadísticas"
             android:textColor="@color/ff_text"
             android:textSize="30sp"
             android:textStyle="bold" />
 
+        <!-- Tarjeta principal -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/bg_hero_blue"
-            android:elevation="9dp"
+            android:elevation="10dp"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="22dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total gastado"
+                android:text="💰 Total gastado"
                 android:textColor="#DDEBFF"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtTotalGeneral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Total gastado: S/ 0.00"
-                android:textColor="@color/white"
-                android:textSize="28sp"
+                android:layout_marginTop="8dp"
+                android:text="S/ 0.00"
+                android:textColor="@android:color/white"
+                android:textSize="32sp"
                 android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- KPIs -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_glass_card_blue"
+                android:elevation="6dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📄 Gastos"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtCantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="0"
+                    android:textColor="@color/ff_primary_dark"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_glass_card_blue"
+                android:elevation="6dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="💵 Promedio"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtPromedio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="S/0.00"
+                    android:textColor="@color/ff_primary_dark"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_glass_card_blue"
+                android:elevation="6dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="📅 Este mes"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtMes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="S/0.00"
+                    android:textColor="@color/ff_primary_dark"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_glass_card_blue"
+                android:elevation="6dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="🏆 Principal"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtTopCategoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="-"
+                    android:textColor="@color/ff_primary_dark"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Gráfico -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@drawable/bg_glass_card"
             android:elevation="8dp"
             android:orientation="vertical"
@@ -66,6 +201,21 @@
                 android:layout_height="330dp" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="📊 Gastos por mes"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/ff_text"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
                 android:id="@+id/txtEmptyStatistics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +224,7 @@
                 android:text="Registra gastos para ver tus estadísticas"
                 android:textColor="@color/ff_text_soft"
                 android:textSize="17sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -82,14 +232,14 @@
             android:id="@+id/txtTopCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/bg_glass_card_blue"
             android:elevation="6dp"
             android:padding="18dp"
-            android:text="Categoría principal:"
+            android:text="Categoría principal"
             android:textColor="@color/ff_text"
             android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/txtRanking"
@@ -102,19 +252,94 @@
             android:text="Ranking de categorías"
             android:textColor="@color/ff_text"
             android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/layoutRanking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/cardInsights"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_glass_card_blue"
+            android:elevation="6dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🤖 Análisis Inteligente"
+                android:textColor="@color/ff_text"
+                android:textSize="19sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txtInsights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="6dp"
+                android:textColor="@color/ff_text"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_glass_card_blue"
+            android:elevation="6dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📈 Comparación mensual"
+                android:textColor="@color/ff_text"
+                android:textSize="19sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txtMonthlyComparison"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="6dp"
+                android:textColor="@color/ff_text"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExportPdf"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:text="📄 Exportar reporte PDF"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#2563EB"
+            app:cornerRadius="24dp"/>
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/btn_primary_gradient"
-            android:elevation="5dp"
             android:text="Volver"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
